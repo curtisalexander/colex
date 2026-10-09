@@ -1,0 +1,24 @@
+name: Integration smoke test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: '3.12'
+      - run: uv sync --locked
+      - name: Require PowerShell on the runner
+        shell: pwsh
+        run: $PSVersionTable.PSVersion.ToString()
+      - name: Test installation and real MCP tool calls
+        run: uv run --locked pytest -q tests/test_install.py tests/test_tools.py -k "install_launch or discovery_arguments or powershell_inline"

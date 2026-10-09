@@ -1,0 +1,6 @@
+{
+  "name": "colex",
+  "description": "Personal native command and PowerShell tools, managed by uv.",
+  "version": "0.1.0",
+  "author": { "name": "Curtis Alexander" }
+}
